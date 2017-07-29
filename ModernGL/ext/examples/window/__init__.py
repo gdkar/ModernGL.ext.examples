@@ -30,13 +30,21 @@ PLATFORM = platform.system().lower()
 DEFAULT_BACKEND = 'GLWindow' if PLATFORM == 'windows' else 'PyQt5'
 DEFAULT_FALLBACKS = 'PyQt5 pygame'
 
+PACKAGE = 'ModernGL.ext.examples.window'
+
+MODULES = {
+    'glwindow': 'GLWindow',
+    'pygame': 'pygame',
+    'pyqt5': 'PyQt5',
+}
 
 class ExampleWindow:
     def __init__(self, example, size, title, backend, fallbacks):
         self.backend = None
 
         try:
-            self.impl = importlib.import_module('.' + backend, package='ModernGL.ext.examples.window')
+            backend = MODULES.get(backend.lower(), backend)
+            self.impl = importlib.import_module('.' + backend, package=PACKAGE)
             self.backend = backend
 
         except ImportError:
@@ -44,10 +52,11 @@ class ExampleWindow:
 
             if fallbacks:
                 for fallback in fallbacks.split():
+                    fallback = MODULES.get(fallback.lower(), fallback)
                     log.debug('trying fallback %s', fallback)
 
                     try:
-                        self.impl = importlib.import_module('.' + fallback, package='ModernGL.ext.examples.window')
+                        self.impl = importlib.import_module('.' + fallback, package=PACKAGE)
                         self.backend = fallback
                         break
 
