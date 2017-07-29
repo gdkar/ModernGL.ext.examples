@@ -2,9 +2,10 @@
     ModernGL example window
 '''
 
-import logging
-import platform
 import importlib
+import logging
+import os
+import platform
 
 try:
     import ModernGL
@@ -28,6 +29,7 @@ log = logging.getLogger('ModernGL.ext.examples')
 
 PLATFORM = platform.system().lower()
 DEFAULT_BACKEND = 'GLWindow' if PLATFORM == 'windows' else 'PyQt5'
+DEFAULT_BACKEND = os.environ.get('MGL_BACKEND', DEFAULT_BACKEND)
 DEFAULT_FALLBACKS = 'PyQt5 pygame'
 
 PACKAGE = 'ModernGL.ext.examples.window'
@@ -37,6 +39,7 @@ MODULES = {
     'pygame': 'pygame',
     'pyqt5': 'PyQt5',
 }
+
 
 class ExampleWindow:
     def __init__(self, example, size, title, backend, fallbacks):
