@@ -5,22 +5,55 @@ from pygame.locals import DOUBLEBUF, OPENGL
 VERSION = pygame.__version__
 
 
+class WindowData:
+    def __init__(self):
+        self.frame_time = None
+        self.viewport = None
+        self.size = None
+        self.mouse = None
+
+    def key_pressed(self, key):
+        return False
+
+    def key_released(self, key):
+        return False
+
+    def key_down(self, key):
+        return False
+
+    def key_up(self, key):
+        return False
+
+
 class Window:
     def __init__(self, app, size, title):
         self.title = title
         self.size = size
         self.app = app
         self.wnd = None
+        self.wnd_data = None
+
+    def prepare_wnd_data(self):
+        width, height = self.size
+        self.wnd_data.viewport = (0, 0, width, height)
+        self.wnd_data.size = self.size
+        self.wnd_data.mouse = (0, 0)
+
+        now = pygame.time.get_ticks()
+        self.wnd_data.frame_time = (now - self.start_ticks) / 1000
+        self.start_ticks = now
 
     def main_loop(self):
         pygame.init()
         pygame.display.set_caption(self.title)
         pygame.display.set_mode(self.size, DOUBLEBUF | OPENGL)
-        self.app = self.app()
-        self.app.init()
 
-        viewport = (0, 0, self.size[0], self.size[1])
-        start_ticks = pygame.time.get_ticks()
+        self.start_ticks = pygame.time.get_ticks()
+        self.wnd_data = WindowData()
+
+        self.app = self.app()
+        self.prepare_wnd_data()
+        self.app.init(self.wnd_data)
 
         running = True
         while running:
@@ -28,11 +61,8 @@ class Window:
                 if event.type == pygame.QUIT:
                     running = False
 
-            now = pygame.time.get_ticks()
-            time_delta = (now - start_ticks) / 1000
-            start_ticks = now
-
-            self.app.render(viewport, time_delta)
+            self.prepare_wnd_data()
+            self.app.render(self.wnd_data)
 
             pygame.display.flip()
             pygame.time.wait(10)
