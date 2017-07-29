@@ -51,9 +51,8 @@ class Window:
         self.start_ticks = pygame.time.get_ticks()
         self.wnd_data = WindowData()
 
-        self.app = self.app()
         self.prepare_wnd_data()
-        self.app.init(self.wnd_data)
+        self.app = self.app(self.wnd_data)
 
         running = True
         while running:
@@ -62,7 +61,7 @@ class Window:
                     running = False
 
             self.prepare_wnd_data()
-            self.app.render(self.wnd_data)
+            self.app.render()
 
             pygame.display.flip()
             pygame.time.wait(10)

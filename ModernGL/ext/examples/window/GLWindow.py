@@ -52,10 +52,9 @@ class Window:
         self.wnd = GLWindow.create_window(self.size, title=self.title)
         self.wnd_data = WindowData(self.wnd)
 
-        self.app = self.app()
         self.prepare_wnd_data()
-        self.app.init(self.wnd_data)
+        self.app = self.app(self.wnd_data)
 
         while self.wnd.update():
             self.prepare_wnd_data()
-            self.app.render(self.wnd_data)
+            self.app.render()

@@ -4,11 +4,12 @@ from ModernGL.ext.examples import run_example
 
 
 class Example:
-    def init(self, wnd):
-        pass
+    def __init__(self, wnd):
+        self.wnd = wnd
+        self.ctx = ModernGL.create_context()
 
-    def render(self, wnd):
-        print(wnd.viewport, wnd.frame_time)
+    def render(self):
+        print(self.wnd.viewport, self.wnd.frame_time)
 
 
 # import logging

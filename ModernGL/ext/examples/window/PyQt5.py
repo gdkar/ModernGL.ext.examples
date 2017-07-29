@@ -48,13 +48,12 @@ class QGLControllerWidget(QtOpenGL.QGLWidget):
         self.start_ticks = now
 
     def initializeGL(self):
-        self.app = self.app()
         self.prepare_wnd_data()
-        self.app.init(self.wnd_data)
+        self.app = self.app(self.wnd_data)
 
     def paintGL(self):
         self.prepare_wnd_data()
-        self.app.render(self.wnd_data)
+        self.app.render()
         self.update()
 
 
