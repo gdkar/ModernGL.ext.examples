@@ -35,7 +35,7 @@ setup(
     description='ModernGL extension',
     url='https://github.com/cprogrammer1994/ModernGL.ext.examples',
     license='MIT',
-    packages=['ModernGL.ext.examples'],
+    packages=['ModernGL.ext.examples', 'ModernGL.ext.examples.window'],
     install_requires=install_requires,
     platforms=['any'],
 )
