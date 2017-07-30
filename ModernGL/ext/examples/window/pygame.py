@@ -7,6 +7,7 @@ VERSION = pygame.__version__
 
 class WindowData:
     def __init__(self):
+        self.time = None
         self.frame_time = None
         self.viewport = None
         self.size = None
@@ -40,8 +41,9 @@ class Window:
         self.wnd_data.mouse = (0, 0)
 
         now = pygame.time.get_ticks()
-        self.wnd_data.frame_time = (now - self.start_ticks) / 1000
-        self.start_ticks = now
+        self.wnd_data.time = (now - self.start_ticks) / 1000
+        self.wnd_data.frame_time = (now - self.last_ticks) / 1000
+        self.last_ticks = now
 
     def main_loop(self):
         pygame.init()
@@ -49,6 +51,7 @@ class Window:
         pygame.display.set_mode(self.size, DOUBLEBUF | OPENGL)
 
         self.start_ticks = pygame.time.get_ticks()
+        self.last_ticks = self.start_ticks
         self.wnd_data = WindowData()
 
         self.prepare_wnd_data()

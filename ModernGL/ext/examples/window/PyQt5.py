@@ -6,6 +6,7 @@ VERSION = QtCore.PYQT_VERSION_STR
 
 class WindowData:
     def __init__(self):
+        self.time = None
         self.frame_time = None
         self.viewport = None
         self.size = None
@@ -35,6 +36,7 @@ class QGLControllerWidget(QtOpenGL.QGLWidget):
         self.timer = QtCore.QElapsedTimer()
         self.timer.restart()
         self.start_ticks = self.timer.elapsed()
+        self.last_ticks = self.start_ticks
         self.app = app
 
     def prepare_wnd_data(self):
@@ -44,8 +46,9 @@ class QGLControllerWidget(QtOpenGL.QGLWidget):
         self.wnd_data.mouse = (0, 0)
 
         now = self.timer.elapsed()
-        self.wnd_data.frame_time = (now - self.start_ticks) / 1000
-        self.start_ticks = now
+        self.wnd_data.time = (now - self.start_ticks) / 1000
+        self.wnd_data.frame_time = (now - self.last_ticks) / 1000
+        self.last_ticks = now
 
     def initializeGL(self):
         self.prepare_wnd_data()

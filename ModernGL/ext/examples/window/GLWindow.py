@@ -33,6 +33,10 @@ class WindowData:
         return self._wnd.time_delta
 
     @property
+    def time(self):
+        return self._wnd.time
+
+    @property
     def mouse(self):
         return self._wnd.mouse
 
