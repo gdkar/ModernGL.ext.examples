@@ -11,5 +11,8 @@ class Example:
         self.ctx.viewport = self.wnd.viewport
         self.ctx.clear(0.2, 0.4, 0.7)
 
+        if self.wnd.key_down(' '):
+            self.ctx.clear(0.2, 0.7, 0.4)
+
 
 run_example(Example)
