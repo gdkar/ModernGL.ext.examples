@@ -1,7 +1,5 @@
 from PyQt5 import QtOpenGL, QtWidgets, QtCore
-
-
-VERSION = QtCore.PYQT_VERSION_STR
+import time
 
 
 class WindowData:
@@ -31,11 +29,11 @@ class QGLControllerWidget(QtOpenGL.QGLWidget):
         fmt.setVersion(3, 3)
         fmt.setProfile(QtOpenGL.QGLFormat.CoreProfile)
         fmt.setSampleBuffers(True)
+
         super(QGLControllerWidget, self).__init__(fmt, None)
+
         self.wnd_data = WindowData()
-        self.timer = QtCore.QElapsedTimer()
-        self.timer.restart()
-        self.start_ticks = self.timer.elapsed()
+        self.start_ticks = time.perf_counter()
         self.last_ticks = self.start_ticks
         self.app = app
 
@@ -45,9 +43,9 @@ class QGLControllerWidget(QtOpenGL.QGLWidget):
         self.wnd_data.size = (width, height)
         self.wnd_data.mouse = (0, 0)
 
-        now = self.timer.elapsed()
-        self.wnd_data.time = (now - self.start_ticks) / 1000
-        self.wnd_data.frame_time = (now - self.last_ticks) / 1000
+        now = time.perf_counter()
+        self.wnd_data.time = now - self.start_ticks
+        self.wnd_data.frame_time = now - self.last_ticks
         self.last_ticks = now
 
     def initializeGL(self):
@@ -60,18 +58,14 @@ class QGLControllerWidget(QtOpenGL.QGLWidget):
         self.update()
 
 
-class Window:
-    def __init__(self, app, size, title):
-        self.title = title
-        self.size = size
-        self.app = app
-        self.wnd = None
+def run_example(example, size, title):
+    if title is None:
+        title = '%s - %s - %s' % (example.__name__, 'ModernGL', 'PyQt5')
 
-    def main_loop(self):
-        qtapp = QtWidgets.QApplication([])
-        self.wnd = QGLControllerWidget(self.app)
-        self.wnd.setFixedSize(self.size[0], self.size[1])
-        self.wnd.setWindowTitle(self.title)
-        self.wnd.move(QtWidgets.QDesktopWidget().rect().center() - self.wnd.rect().center())
-        self.wnd.show()
-        qtapp.exec_()
+    qtapp = QtWidgets.QApplication([])
+    wnd = QGLControllerWidget(example)
+    wnd.setFixedSize(size[0], size[1])
+    wnd.setWindowTitle(title)
+    wnd.move(QtWidgets.QDesktopWidget().rect().center() - wnd.rect().center())
+    wnd.show()
+    qtapp.exec_()
