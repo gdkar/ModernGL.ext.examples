@@ -94,8 +94,14 @@ def run_example(example, size, title):
 
     qtapp = QtWidgets.QApplication([])
     wnd = QGLControllerWidget(example)
-    wnd.setFixedSize(size[0], size[1])
     wnd.setWindowTitle(title)
-    wnd.move(QtWidgets.QDesktopWidget().rect().center() - wnd.rect().center())
-    wnd.show()
+
+    if size == 'fullscreen':
+        wnd.showFullScreen()
+
+    else:
+        wnd.setFixedSize(size[0], size[1])
+        wnd.move(QtWidgets.QDesktopWidget().rect().center() - wnd.rect().center())
+        wnd.show()
+
     qtapp.exec_()
