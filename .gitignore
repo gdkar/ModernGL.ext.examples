@@ -1,6 +1,7 @@
 ModernGL/*
 !ModernGL/ext
 ModernGL/ext/__init__.py
+ModernGL/ext/__main__.py
 
 **/__pycache__
 **/build
