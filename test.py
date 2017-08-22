@@ -1,5 +1,4 @@
 import ModernGL
-
 from ModernGL.ext.examples import run_example
 
 
@@ -9,12 +8,11 @@ class Example:
         self.ctx = ModernGL.create_context()
 
     def render(self):
-        print(self.wnd.viewport, self.wnd.frame_time)
+        self.ctx.viewport = self.wnd.viewport
+        self.ctx.clear(0.2, 0.4, 0.7)
 
+        if self.wnd.key_down(' '):
+            self.ctx.clear(0.2, 0.7, 0.4)
 
-# import logging
-# log = logging.getLogger('ModernGL.ext.examples')
-# log.addHandler(logging.StreamHandler())
-# log.setLevel(logging.DEBUG)
 
 run_example(Example)
