@@ -31,6 +31,7 @@ class QGLControllerWidget(QtOpenGL.QGLWidget):
         fmt.setVersion(3, 3)
         fmt.setProfile(QtOpenGL.QGLFormat.CoreProfile)
         fmt.setSampleBuffers(True)
+        fmt.setDepthBufferSize(24)
 
         super(QGLControllerWidget, self).__init__(fmt, None)
 
