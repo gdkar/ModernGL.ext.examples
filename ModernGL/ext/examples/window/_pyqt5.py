@@ -50,7 +50,7 @@ class QGLControllerWidget(QtOpenGL.QGLWidget):
         width, height = self.width(), self.height()
         self.wnd_data.viewport = (0, 0, width, height)
         self.wnd_data.size = (width, height)
-        self.wnd_data.ratio = width / height if height else 0.0
+        self.wnd_data.ratio = width / height if height else 1.0
         self.wnd_data.mouse = self.mouse
 
         for i in range(256):

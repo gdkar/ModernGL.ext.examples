@@ -24,7 +24,7 @@ def run_example(example, *, size=None, title=None, backend=None, fallbacks=None)
 
     for name in backends:
         try:
-            module = importlib.import_module('.window.' + name, 'ModernGL.ext.examples')
+            module = importlib.import_module('.window._' + name, 'ModernGL.ext.examples')
             return module.run_example(example, size, title)
 
         except ImportError:
