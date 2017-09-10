@@ -1,7 +1,7 @@
-import time
+import time, sys, signal
 
-from PyQt5 import QtCore, QtOpenGL, QtWidgets
-
+import PyQt5.Qt as Q, PyQt5.QtCore, PyQt5.QtGui, PyQt5.QtWidgets
+from .interruptingcow import SignalWakeupHandler
 
 class WindowData:
     def __init__(self):
@@ -27,16 +27,16 @@ class WindowData:
         return self._key_state[key if type(key) is int else ord(key)] == 0
 
 
-class QGLControllerWidget(QtOpenGL.QGLWidget):
+class QGLControllerWidget(Q.QOpenGLWidget):
     def __init__(self, app):
-        fmt = QtOpenGL.QGLFormat()
-        fmt.setVersion(3, 3)
-        fmt.setProfile(QtOpenGL.QGLFormat.CoreProfile)
-        fmt.setSampleBuffers(True)
-        fmt.setDepthBufferSize(24)
+#        fmt = Q.()
+#        fmt.setVersion(3, 3)
+#        fmt.setProfile(fmt.CoreProfile)
+        #fmt.setSampleBuffers(True)
+#        fmt.setDepthBufferSize(24)
 
-        super(QGLControllerWidget, self).__init__(fmt, None)
-
+        super(QGLControllerWidget, self).__init__(None)
+#        self.setFormat(fmt)
         self.setMouseTracking(True)
 
         self.wnd_data = WindowData()
@@ -96,16 +96,26 @@ def run_example(example, size, title):
     if title is None:
         title = '%s - %s - %s' % (example.__name__, 'ModernGL', 'PyQt5')
 
-    qtapp = QtWidgets.QApplication([])
-    wnd = QGLControllerWidget(example)
-    wnd.setWindowTitle(title)
+    fmt = Q.QSurfaceFormat.defaultFormat()
+    fmt.setVersion(4,5)
+    fmt.setProfile(fmt.CoreProfile)
+    fmt.setDepthBufferSize(24)
+    Q.QSurfaceFormat.setDefaultFormat(fmt)
+    Q.QCoreApplication.setAttribute(Q.Qt.AA_ShareOpenGLContexts)
 
-    if size == 'fullscreen':
-        wnd.showFullScreen()
+    qtapp = Q.QApplication([])
 
-    else:
-        wnd.setFixedSize(size[0], size[1])
-        wnd.move(QtWidgets.QDesktopWidget().rect().center() - wnd.rect().center())
-        wnd.show()
+    with SignalWakeupHandler(qtapp):
+        signal.signal(signal.SIGINT,lambda *a:qtapp.quit())
+        wnd = QGLControllerWidget(example)
+        wnd.setWindowTitle(title)
 
-    qtapp.exec_()
+        if size == 'fullscreen':
+            wnd.showFullScreen()
+
+        else:
+            wnd.setFixedSize(size[0], size[1])
+            wnd.move(Q.QDesktopWidget().rect().center() - wnd.rect().center())
+            wnd.show()
+
+        sys.exit(qtapp.exec_())
